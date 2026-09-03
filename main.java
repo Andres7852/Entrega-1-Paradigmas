@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.List;
+
 class manufactura {
 
     private Integer CodigoProducto;
@@ -128,5 +131,67 @@ class manufactura {
                 ", MetaProduccion=" + MetaProduccion +
                 ", CostoProduccion=$" + CostoProduccion +
                 "]";
+    }
+}
+
+public class main {
+
+    public static void main(String[] args) {
+
+        String flujoElectromecanico = "Recepcion de materia prima -> " +
+                "Preparacion de componentes -> " +
+                "Ensamble electromecanico -> " +
+                "Pruebas funcionales -> " +
+                "Control de calidad -> " +
+                "Empaque y envio";
+
+        String flujoElectrodomesticos = "Recepcion de materia prima -> " +
+                "Preparacion de carcasa y componentes -> " +
+                "Ensamble electrico y mecanico -> " +
+                "Pruebas funcionales -> " +
+                "Control de calidad -> " +
+                "Empaque y envio";
+
+        String flujoIluminacion = "Recepcion de materia prima -> " +
+                "Preparacion de estructura -> " +
+                "Ensamble electrico -> " +
+                "Prueba de iluminacion -> " +
+                "Control de calidad -> " +
+                "Empaque y envio";
+
+        List<manufactura> listaManufacturas = Arrays.asList(
+
+                new manufactura(1, "Motor Industrial", flujoElectromecanico, 100, 7, 1500.00,
+                        12000.0, 5500.0, 80, 950.00),
+
+                new manufactura(2, "Aspiradora", flujoElectrodomesticos, 78, 34, 438.67,
+                        3510.0, 624.0, 60, 270.00),
+
+                new manufactura(3, "Lampara", flujoIluminacion, 340, 32, 133.00,
+                        2720.0, 850.0, 400, 78.00),
+
+                new manufactura(4, "Ventilador", flujoElectrodomesticos, 200, 12, 250.00,
+                        7000.0, 1200.0, 250, 150.00),
+
+                new manufactura(5, "Licuadora", flujoElectrodomesticos, 300, 15, 149.20,
+                        9000.0, 1200.0, 350, 88.00),
+
+                new manufactura(6, "Cafetera", flujoElectrodomesticos, 120, 5, 220.00,
+                        4200.0, 540.0, 130, 130.00),
+
+                new manufactura(7, "Calefactor", flujoElectrodomesticos, 180, 10, 125.00,
+                        5400.0, 900.0, 200, 75.00),
+
+                new manufactura(8, "Taladro", flujoElectromecanico, 150, 8, 211.10,
+                        3750.0, 525.0, 180, 125.00),
+
+                new manufactura(9, "Sierra Electrica", flujoElectromecanico, 90, 6, 550.76,
+                        3150.0, 630.0, 100, 330.00),
+
+                new manufactura(10, "Compresor de Aire", flujoElectromecanico, 50, 3, 800.00,
+                        4500.0, 1250.0, 60, 520.00)
+
+        );
+
     }
 }
