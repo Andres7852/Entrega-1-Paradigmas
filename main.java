@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 class manufactura {
 
@@ -192,6 +194,123 @@ public class main {
                         4500.0, 1250.0, 60, 520.00)
 
         );
+
+        // ==========================================
+        // 1. PRODUCTOS CON ALTO NIVEL DE DEFECTOS
+        // ==========================================
+
+        java.util.function.Predicate<manufactura> nivelAltoDefectos = p -> ((double) p.getCantidadDefectuosa()
+                / p.getCantidad()) * 100 > 50;
+
+        List<manufactura> productosAltoNivelDefectos = listaManufacturas.stream()
+                .filter(nivelAltoDefectos)
+                .collect(Collectors.toList());
+
+        System.out.println("PRODUCTOS CON ALTO NIVEL DE DEFECTOS");
+
+        productosAltoNivelDefectos.forEach(System.out::println);
+
+        // ==========================================
+        // 2. PRODUCTOS QUE CUMPLEN LA META
+        // ==========================================
+
+        java.util.function.Predicate<manufactura> cumpleMeta = p -> p.getCantidad() > p.getMetaProduccion();
+
+        List<manufactura> productosCumplenMeta = listaManufacturas.stream()
+                .filter(cumpleMeta)
+                .collect(Collectors.toList());
+
+        System.out.println("PRODUCTOS QUE SUPERAN LA META");
+
+        productosCumplenMeta.forEach(System.out::println);
+
+        // ==========================================
+        // 3. COSTO TOTAL DE FABRICACION
+        // ==========================================
+
+        java.util.function.Function<manufactura, Double> calcularCostoTotal = p -> p.getCostoProduccion()
+                * p.getCantidad();
+
+        System.out.println("COSTO TOTAL DE FABRICACION");
+
+        listaManufacturas.forEach(p -> {
+
+            double costoTotal = calcularCostoTotal.apply(p);
+
+            System.out.println(
+                    p.getNombre()
+                            + " -> Costo total: $" + costoTotal);
+        });
+
+        // ==========================================
+        // 4. PERDIDAS ECONOMICAS POR PRODUCTOS
+        // DEFECTUOSOS
+        // ==========================================
+
+        java.util.function.Function<manufactura, Double> calcularPerdida = p -> p.getCantidadDefectuosa()
+                * p.getCostoProduccion();
+
+        System.out.println("PERDIDAS ECONOMICAS POR DEFECTOS");
+
+        listaManufacturas.forEach(p -> {
+
+            double perdida = calcularPerdida.apply(p);
+
+            System.out.println(
+                    p.getNombre()
+                            + " -> Perdida: $" + perdida);
+        });
+
+        // ==========================================
+        // 5. DESEMPEÑO DE CADA LINEA DE PRODUCCION
+        // ==========================================
+
+        Map<String, List<manufactura>> productosPorLinea = listaManufacturas.stream()
+                .collect(Collectors.groupingBy(
+                        manufactura::getLineaProduccion));
+
+        System.out.println("DESEMPEÑO DE LAS LINEAS DE PRODUCCION");
+
+        productosPorLinea.forEach((linea, productos) -> {
+
+            int cantidadTotal = productos.stream()
+                    .mapToInt(manufactura::getCantidad)
+                    .sum();
+
+            int defectuososTotal = productos.stream()
+                    .mapToInt(manufactura::getCantidadDefectuosa)
+                    .sum();
+
+            double costoTotal = productos.stream()
+                    .mapToDouble(p -> p.getCostoProduccion() * p.getCantidad())
+                    .sum();
+
+            double perdidasTotal = productos.stream()
+                    .mapToDouble(p -> p.getCantidadDefectuosa()
+                            * p.getCostoProduccion())
+                    .sum();
+
+            double porcentajeDefectos = ((double) defectuososTotal / cantidadTotal) * 100;
+
+            System.out.println("LINEA DE PRODUCCION:");
+            System.out.println(linea);
+
+            System.out.println("Cantidad producida: "
+                    + cantidadTotal);
+
+            System.out.println("Cantidad defectuosa: "
+                    + defectuososTotal);
+
+            System.out.println("Porcentaje de defectos: "
+                    + porcentajeDefectos + "%");
+
+            System.out.println("Costo total de fabricacion: $"
+                    + costoTotal);
+
+            System.out.println("Perdidas por productos defectuosos: $"
+                    + perdidasTotal);
+
+        });
 
     }
 }
