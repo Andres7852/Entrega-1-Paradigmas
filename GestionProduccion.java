@@ -21,6 +21,19 @@ public class GestionProduccion {
 	public static void cerrarTurno(List<manufactura> registros) {
 		registros.forEach(auditoriaCierreTurno);
 	}
+    //calcular cantidad total producida
+	public static int cantidadTotalProducida(List<manufactura> registros) {
+		return registros.stream()
+				.mapToInt(manufactura::getCantidad)
+				.sum();
+	}
+
+    //dinero total invertido
+	public static double dineroTotalInvertido(List<manufactura> registros) {
+		return registros.stream()
+				.mapToDouble(registro -> registro.getCostoProduccion() * registro.getCantidad())
+				.sum();
+	}
 
     //aplicar ajuste porcentual sobre un registro 
 	public static UnaryOperator<manufactura> ajustarCantidadPorcentaje(double porcentaje) {
