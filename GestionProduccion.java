@@ -1,6 +1,11 @@
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class GestionProduccion {
+
+	public static final BiConsumer<manufactura, Integer> agregarUnidades = (registro, adicionales) -> {
+		registro.setCantidad(registro.getCantidad() + adicionales);
+	};
 
 	public static manufactura generarRegistroPrueba() {
 		Supplier<manufactura> registroPrueba = () -> new manufactura(
