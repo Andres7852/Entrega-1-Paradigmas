@@ -1,4 +1,6 @@
+
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -329,5 +331,83 @@ public class main {
         // ==========================================
 
         AnalisisProduccion.mostrarAnalisisGlobal(listaManufacturas);
+
+        // ==========================================
+        // 7. REPORTE FINAL
+        // ==========================================
+
+        System.out.println();
+        System.out.println("REPORTE FINAL DE LA JORNADA");
+
+        // Lineas existentes
+        List<String> lineasExistentes = listaManufacturas.stream()
+                .map(manufactura::getNombreLinea)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+        System.out.println("Lineas existentes: " + lineasExistentes);
+
+        // Total de unidades defectuosas
+        int totalDefectuosas = listaManufacturas.stream()
+                .mapToInt(manufactura::getCantidadDefectuosa)
+                .sum();
+
+        System.out.println("Total de unidades defectuosas: " + totalDefectuosas);
+
+        // Costo total de produccion
+        double costoTotalProduccion = listaManufacturas.stream()
+                .mapToDouble(p -> p.getCostoProduccion() * p.getCantidad())
+                .sum();
+
+        System.out.println("Costo total de produccion: $" + costoTotalProduccion);
+
+        // Perdidas economicas totales
+        double perdidasTotales = listaManufacturas.stream()
+                .mapToDouble(p -> p.getCantidadDefectuosa() * p.getCostoProduccion())
+                .sum();
+
+        System.out.println("Perdidas economicas totales: $" + perdidasTotales);
+
+        // Producto con mayor perdida economica
+        listaManufacturas.stream()
+                .max(Comparator.comparingDouble(p -> p.getCantidadDefectuosa() * p.getCostoProduccion()))
+                .ifPresent(p -> System.out.println("Producto con mayor perdida: " + p.getNombre()
+                        + " ($" + (p.getCantidadDefectuosa() * p.getCostoProduccion()) + ")"));
+
+        // Linea con mayor cantidad producida
+        listaManufacturas.stream()
+                .collect(Collectors.groupingBy(
+                        manufactura::getNombreLinea,
+                        Collectors.summingInt(manufactura::getCantidad)))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .ifPresent(e -> System.out.println("Linea con mayor produccion: " + e.getKey()
+                        + " (" + e.getValue() + " unidades)"));
+
+        // ==========================================
+        // 8. OPERACIONES DE TURNO
+        // ==========================================
+
+        System.out.println();
+        System.out.println("OPERACIONES DE TURNO");
+
+        // Supplier: registro de prueba generado automaticamente
+        manufactura registroPrueba = GestionProduccion.generarRegistroPrueba();
+        System.out.println("Registro de prueba: " + registroPrueba);
+
+        // BiConsumer: reportar unidades adicionales
+        manufactura registroAjustado = listaManufacturas.get(3);
+        System.out.println("Ventilador antes: " + registroAjustado.getCantidad() + " uds");
+        GestionProduccion.agregarUnidades.accept(registroAjustado, 60);
+        System.out.println("Ventilador despues de reportar 60 uds: " + registroAjustado.getCantidad());
+
+        // UnaryOperator: ajuste porcentual del -8%
+        GestionProduccion.ajustarCantidadPorcentaje(-8).apply(registroAjustado);
+        System.out.println("Ventilador tras ajuste del -8%: " + registroAjustado.getCantidad());
+
+        // Cierre del turno
+        System.out.println();
+        GestionProduccion.cerrarTurno(listaManufacturas);
     }
 }
